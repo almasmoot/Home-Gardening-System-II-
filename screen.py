@@ -11,7 +11,7 @@ window = sg.Window('Window Title', layout, size=(800, 480), no_titlebar=True)
 string = ''
 # Display and interact with the Window using an Event Loop
 while True:
-    data = json.loads(open("touch_screen/test_data.json", "r").read())
+    data = json.loads(open("test_data.json", "r").read())
     event, values = window.read(timeout=1000)
     # See if user wants to quit or window was closed
     if event == sg.WINDOW_CLOSED or event == 'Quit':

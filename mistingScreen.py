@@ -1,16 +1,22 @@
-import sys  # to get the screen size and close the window
 from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from OpButton import OpButton
 
-BUTTONFONT = QFont("times", 40) # font for the tabs
+BUTTONFONT = QFont("times", 60) # font for the tabs
 LABELFONT1 = QFont("times", 60) # font for the bigger labels (reservoir, temperature)
 LABELFONT2 = QFont("times", 50) # font for the readings for the labels (60%)
+
+MININTERVAL = 2
+MAXINTERVAL = 6
+
 
 class mistingScreen(QWidget):  # this is the class that will have all the fucntions, labels and a buttons for the misting screen
     def __init__(self, parent):   # initialize function
         super(mistingScreen, self).__init__(parent)
-        self.interval = 10  # interval variable in minutes
+        self.effect = QGraphicsOpacityEffect(self)
+        self.intervalmin = 2  # interval variable in minutes
+        self.sec = 0
         self.initUI(parent)  # initalize the ui
 
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
@@ -22,23 +28,30 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
         self.label1.setMinimumWidth(1610)                   # This was added to set the width so the tabs stay in place, the number set will need to be changed according to screen used
         
         self.label2 = QLabel(self)                                      # Make the Reservoir amount label                      
-        self.label2.setText("every " + str(self.interval) + " minutes") # set the text (this should implement a variable later)
+        self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes") # set the text (this should implement a variable later)
         self.label2.setFont(LABELFONT2)                                 # set the font                                          
         self.label2.setAlignment(Qt.AlignCenter)                        # align it in the center 
 
-        self.increase = QPushButton()                                                            # this will make a push button                                  
-        self.increase.setStyleSheet("background-color: blue; border: none; border-radius: 40px") # this will set the style, blue, no border and round the edges          
-        self.increase.setFont(LABELFONT1)                                                        # this will set the font for the increase button               
-        self.increase.setText("+")                                                               # this will set the text to "+"                                  
+        self.increase = OpButton()                                                            # this will make a push button                                  
+        self.increase.setStyleSheet("font: bold; background-color: blue; border: none; border-radius: 40px; color: green") # this will set the style, blue, no border and round the edges          
+        self.increase.setFont(BUTTONFONT)                                                        # this will set the font for the increase button               
+        self.increase.setText("+")                                                               # this will set the text to "+"                                 
         self.increase.clicked.connect(self.inc)                                                  # this will set the funtion for increase button                     
-        self.increase.setFixedSize(200, 200)                                                     # this will set the size of the button                          
+        self.increase.setFixedSize(200, 200)                                                     # this will set the size of the button     
+        self.increase.animation.stop()
+        self.increase.animation.start()
+        self.increase.animation.setDuration(250)
+    
 
-        self.decrease = QPushButton()                                                            # this will make a push button                                   
-        self.decrease.setStyleSheet("background-color: blue; border: none; border-radius: 40px") # this will set the style, blue, no border and round the edges          
-        self.decrease.setFont(LABELFONT1)                                                        # this will set the font for the decrease button                 
+        self.decrease = OpButton()                                                            # this will make a push button                                   
+        self.decrease.setStyleSheet("font: bold; background-color: blue; border: none; border-radius: 40px; color: green") # this will set the style, blue, no border and round the edges          
+        self.decrease.setFont(BUTTONFONT)                                                        # this will set the font for the decrease button                 
         self.decrease.setText("-")                                                               # this will set the text to "-"                                      
         self.decrease.clicked.connect(self.dec)                                                  # this will set the funtion for decrease button                      
-        self.decrease.setFixedSize(200, 200)                                                     # this will set the size of the button                                                         
+        self.decrease.setFixedSize(200, 200)                                                     # this will set the size of the button 
+        self.decrease.animation.stop()
+        self.decrease.animation.start()    
+        self.decrease.animation.setDuration(250)                                                    
 
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
@@ -79,10 +92,23 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
 
     # increment the interval, this funtion will increase the misting interval by 1, (in minutes)
     def inc(self):
-        self.interval = self.interval + 1
-        self.label2.setText("every " + str(self.interval) + " minutes")
+        self.increase.animation.stop()
+        self.increase.animation.start()
+        
+        if (not(self.intervalmin == MAXINTERVAL)):
+            self.sec = ((self.sec + 15) % 60)
+        if (self.sec % 60 == 0 and self.intervalmin < MAXINTERVAL):
+            self.intervalmin = self.intervalmin + 1
+        self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes")
+        
 
     # decrement the interval, this funtion will decrease the misting interval by 1, (in minutes)
     def dec(self):
-        self.interval = self.interval - 1
-        self.label2.setText("every " + str(self.interval) + " minutes")
+        self.decrease.animation.stop()
+        self.decrease.animation.start()
+
+        if (not(self.intervalmin == MININTERVAL and self.sec == 0)):
+            self.sec = ((self.sec - 15) % 60)
+        if ((self.sec + 15) % 60 == 0 and self.intervalmin > MININTERVAL):
+            self.intervalmin = self.intervalmin - 1
+        self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes")

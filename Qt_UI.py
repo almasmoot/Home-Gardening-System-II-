@@ -7,101 +7,97 @@ from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-BUTTONFONT = QFont("times", 30) # font for the tabs
-LABELFONT1 = QFont("times", 60) # font for the bigger labels (reservoir, temperature)
-LABELFONT2 = QFont("times", 30) # font for the readings for the labels (60%)
-WB = 500 # Width buffer for the tabs
-HB = -65 # Hight buffer for the tabs
+SIZE = (480, 800) # (1080, 1920) This will get the screen size as the tabs are configured based on that.
 
-size = (0,0) # This will get the screen size as the tabs are configured based on that.
+FONT = "Cambria"
+
+BUTTONFONT = QFont(FONT, (int(SIZE[0]/32))) # font for the tabs
+LABELFONT1 = QFont(FONT, (int(SIZE[0]/16))) # font for the bigger labels (reservoir, temperature)
+LABELFONT2 = QFont(FONT, (int(SIZE[0]/32))) # font for the readings for the labels (60%)
+# WB = 500 # Width buffer for the tabs
+# HB = -65 # Hight buffer for the tabs
+# BUTTONCOLOR = "rgb(58,99,70)"
+BACKGROUNDCOLOR = "rgb(107,138,116)" #    rgb(74,223,0)
+
+STYLE = "background-color: rgb(255,255,255); border: none; font: bold; color: " + BACKGROUNDCOLOR + ";"   # rgb(58,99,70)
+STYLE2 = "background-color: " + BACKGROUNDCOLOR + "; border: none; font: bold; color: white;"
+
+
+
+def makeTab(tab, text, func):
+    tab.setFixedSize((int(SIZE[1] / 6)), (int(SIZE[0] / 4))) # set the size of the tab
+    tab.setStyleSheet(STYLE)                                # set the background and boarder of the tab
+    tab.setFont(BUTTONFONT)                                  # Set the button (tab) font                                                             
+    tab.setText(text)                                        # Set the button (tab) text                                  
+    tab.clicked.connect(func)                               # set the tab function to call when clicked
 
 class MainWindow(QMainWindow):  # Main window for the gui
     def __init__(self, parent=None): # init function
         super(MainWindow, self).__init__(parent) # remake the init funtion with what we want
-        self.BWIDTH = int((size.width()+WB) / 8) # Setting the button (tab) width
-        self.BHEIGHT = int((size.height()+HB) / 4) # Setting the button (tab) height
-        self.setStyleSheet("background-color: rgb(128,255,149)") # Set the background color
-        # self.setWindowFlag(Qt.FramelessWindowHint)  # if we want a framless window uncomment this code
+        self.setFixedSize(SIZE[1], SIZE[0]) # This is for testing on anything besides the pi, it will give an acurate mesurement of the size, uncomment when using on pi
+        self.sizeOfScreen = SIZE
+        self.setStyleSheet("background-color: " + BACKGROUNDCOLOR) # Set the background color
+        self.setWindowFlag(Qt.FramelessWindowHint)  # if we want a framless window uncomment this code
+        self.BACKGROUNDCOLOR = BACKGROUNDCOLOR
+        self.STYLE = STYLE
         self.startHome()
 
     def startHome(self):
-        self.Home = QPushButton(self)                                    # Make a push button (Home tab)                                                        
-        self.Home.setFixedSize(self.BWIDTH, self.BHEIGHT)                # These are the tabs and they need to be a set size to fill the left side of the screen
-        self.Home.setStyleSheet("background-color: green; border: none") # set the background and boarder of the tab                                             
-        self.Home.setFont(BUTTONFONT)                                    # Set the button (tab) font                                                             
-        self.Home.setText("Home")                                        # Set the button (tab) text, this will be our home tab                                  
-        self.Home.clicked.connect(self.home_clicked)                     # Set the function to call when the home (tab) button is pressed                         
+        
 
-        self.Misting = QPushButton(self)                                   # Make a push button (Misting tab)                                                        
-        self.Misting.setFixedSize(self.BWIDTH, self.BHEIGHT)               # These are the tabs and they need to be a set size to fill the left side of the screen
-        self.Misting.setStyleSheet("background-color: green; border: none")# set the background and boarder of the tab                                            
-        self.Misting.setFont(BUTTONFONT)                                   # Set the button (tab) font                                                            
-        self.Misting.setText("Misting")                                    # Set the button (tab) text, this will be our Misting tab                                  
-        self.Misting.clicked.connect(self.mist_clicked)                    # Set the function to call when the Misting (tab) button is pressed                        
+        self.Home = QPushButton(self)                              # Make a push button (Home tab)                                                        
+        makeTab(self.Home, "Home", self.home_clicked)              # Make a tab, pass in the button, the text and the fucntion to call
+        self.Home.animateClick()                           
 
-        self.Lighting = QPushButton(self)                                   # Make a push button (Lighting tab)                                                        
-        self.Lighting.setFixedSize(self.BWIDTH, self.BHEIGHT)               # These are the tabs and they need to be a set size to fill the left side of the screen 
-        self.Lighting.setStyleSheet("background-color: green; border: none")# set the background and boarder of the tab                                            
-        self.Lighting.setFont(BUTTONFONT)                                   # Set the button (tab) font                                                            
-        self.Lighting.setText("Lighting")                                   # Set the button (tab) text, this will be our Lighting tab                                 
-        self.Lighting.clicked.connect(self.light_clicked)                   # Set the function to call when the Lighting (tab) button is pressed                       
+        self.Misting = QPushButton(self)                           # Make a push button (Misting tab)                                                        
+        makeTab(self.Misting, "Misting", self.mist_clicked)        # Make a tab, pass in the button, the text and the fucntion to call
 
-        self.Nutrients = QPushButton(self)                                   # Make a push button (Nutrients tab)                                                        
-        self.Nutrients.setFixedSize(self.BWIDTH, self.BHEIGHT)               # These are the tabs and they need to be a set size to fill the left side of the screen
-        self.Nutrients.setStyleSheet("background-color: green; border: none")# set the background and boarder of the tab                                            
-        self.Nutrients.setFont(BUTTONFONT)                                   # Set the button (tab) font                                                            
-        self.Nutrients.setText("Nutrients")                                  # Set the button (tab) text, this will be our Nutrients tab                                 
-        self.Nutrients.clicked.connect(self.nutri_clicked)                   # Set the function to call when the Nutrients (tab) button is pressed                        
+        self.Lighting = QPushButton(self)                          # Make a push button (Lighting tab)                                                           
+        makeTab(self.Lighting, "Lighting", self.light_clicked)     # Make a tab, pass in the button, the text and the fucntion to call
+
+        self.Nutrients = QPushButton(self)                         # Make a push button (Nutrients tab)                                                        
+        makeTab(self.Nutrients, "Nutrients", self.nutri_clicked)   # Pass in the tab to make, the text for the tab, and the function to call                    
         
-        
-        self.Window = homeScreen(self)
-        self.setCentralWidget(self.Window)
-        
-        
-        self.showMaximized()
+        # self.showMaximized() # uncomment this when on the pi
+        self.show() # comment this out when on anything with a bigger screen
 
 
     # Home is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def home_clicked(self):
-        self.Home.setStyleSheet("background-color: rgb(128,255,149); border: none")
-        self.Misting.setStyleSheet("background-color: green; border: none")
-        self.Lighting.setStyleSheet("background-color: green; border: none")
-        self.Nutrients.setStyleSheet("background-color: green; border: none")
+        self.setBtns(btn_clk=self.Home, other=[self.Misting, self.Lighting, self.Nutrients])
         self.Window = homeScreen(self)      # change to the home screen
         self.setCentralWidget(self.Window)
 
     # Misting is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def mist_clicked(self):
-        self.Home.setStyleSheet("background-color: green; border: none")
-        self.Misting.setStyleSheet("background-color: rgb(128,255,149); border: none")
-        self.Lighting.setStyleSheet("background-color: green; border: none")
-        self.Nutrients.setStyleSheet("background-color: green; border: none")
+        self.setBtns(btn_clk=self.Misting, other=[self.Home, self.Lighting, self.Nutrients])
         self.Window = mistingScreen(self)      # change to the misting screen
         self.setCentralWidget(self.Window)
 
     # Lighting is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def light_clicked(self):
-        self.Home.setStyleSheet("background-color: green; border: none")
-        self.Misting.setStyleSheet("background-color: green; border: none")
-        self.Lighting.setStyleSheet("background-color: rgb(128,255,149); border: none")
-        self.Nutrients.setStyleSheet("background-color: green; border: none")
+        self.setBtns(btn_clk=self.Lighting, other=[self.Home, self.Misting, self.Nutrients])
         self.Window = lighingScreen(self)      # change to the lighting screen
         self.setCentralWidget(self.Window)
 
     # Nutrients is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def nutri_clicked(self):
-        self.Home.setStyleSheet("background-color: green; border: none")
-        self.Misting.setStyleSheet("background-color: green; border: none")
-        self.Lighting.setStyleSheet("background-color: green; border: none")
-        self.Nutrients.setStyleSheet("background-color: rgb(128,255,149); border: none")
+        self.setBtns(btn_clk = self.Nutrients, other = [self.Misting, self.Home, self.Lighting])
         self.Window = nutrientScreen(self)      # change to the nutrients screen
         self.setCentralWidget(self.Window)
+
+    def setBtns(self, btn_clk, other):
+        other[0].setStyleSheet(STYLE)
+        other[1].setStyleSheet(STYLE)
+        other[2].setStyleSheet(STYLE)
+        btn_clk.setStyleSheet(STYLE2)
+
 
 # I like the look of a more C++ program so this will run like main
 if __name__=='__main__':
     app = QApplication(sys.argv) # Sets the application
-    screen = app.primaryScreen() # This is to get the screen
-    size = screen.size()  # With the screen we can get the screen size and base the tabs off of that
+    # screen = app.primaryScreen() # This is to get the screen
+    # size = screen.size()  # With the screen we can get the screen size and base the tabs off of that
     win = MainWindow()    # Make the main window
     win.show()              # shows the main window
     sys.exit(app.exec_()) # on exit

@@ -3,11 +3,27 @@ from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-BUTTONFONT = QFont("times", 30) # font for the tabs
-LABELFONT1 = QFont("times", 60) # font for the bigger labels (reservoir, temperature)
-LABELFONT2 = QFont("times", 50) # font for the readings for the labels (60%)
+SIZE = (480, 800)
+
+FONT = "Cambria"
+
+BUTTONFONT = QFont(FONT, (int(SIZE[0]/12))) # font for the tabs
+LABELFONT1 = QFont(FONT, (int(SIZE[0]/20))) # font for the bigger labels (reservoir, temperature)
+LABELFONT2 = QFont(FONT, (int(SIZE[0]/25))) # font for the readings for the labels (60%)
 MINTIME = 6
 MAXTIME = 9
+
+BUTTONSTYLE = "font: bold; color: rgb(107,138,116); background-color: white; border: none; border-radius: 40px" # rgb(93,173,236)
+
+def setButton(button, text, func):
+    button.setStyleSheet(BUTTONSTYLE)
+    button.setFont(BUTTONFONT)
+    button.setText(text)
+    button.clicked.connect(func)
+    button.setFixedSize(100, 100)                                                     # this will set the size of the button     
+    button.animation.stop()
+    button.animation.start()
+    button.animation.setDuration(250)
 
 class lighingScreen(QWidget):
     def __init__(self, parent):
@@ -24,62 +40,70 @@ class lighingScreen(QWidget):
         self.label1.setText("Light duration")         # Set the text                                         
         self.label1.setFont(LABELFONT1)               # Set the font for the label                           
         self.label1.setAlignment(Qt.AlignCenter)      # This will align it to the center                        
-        self.label1.setMinimumWidth(1610)             # This was added to set the width so the tabs stay in place, the number set will need to be changed according to screen used
+        self.label1.setMinimumWidth((int(SIZE[1]/1.16)))             # This was added to set the width so the tabs stay in place, the number set will need to be changed according to screen used
+        self.label1.setStyleSheet("font: bold; color: white")
         
         self.label2 = QLabel(self)                                      # Make the Reservoir amount label                      
-        self.label2.setText(str(self.duration))              # set the text (this should implement a variable later)
+        self.label2.setText(str(self.duration) + " hours")              # set the text (this should implement a variable later)
         self.label2.setFont(LABELFONT2)                                 # set the font                                          
         self.label2.setAlignment(Qt.AlignCenter)                        # align it in the center
+        self.label2.setStyleSheet("font: bold; color: white")
 
         self.startLabel = QLabel(self)
-        self.startLabel.setText("start time: " + str(self.startTime) + ":00 am")
+        self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
         self.startLabel.setFont(LABELFONT2)
+        self.startLabel.setStyleSheet("font: bold; color: white")
         self.startLabel.setAlignment(Qt.AlignHCenter)
 
         self.endLabel = QLabel(self)
-        self.endLabel.setText("end time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
+        self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
         self.endLabel.setFont(LABELFONT2)
+        self.endLabel.setStyleSheet("font: bold; color: white")
         self.endLabel.setAlignment(Qt.AlignHCenter)  
 
         self.increaseStart = OpButton(self)
-        self.increaseStart.setText("+")
-        self.increaseStart.setFont(BUTTONFONT)
-        self.increaseStart.setStyleSheet("font: bold; color: green; background-color: blue; border: none; border-radius: 40px")
-        self.increaseStart.setFixedSize(200, 200)
-        self.increaseStart.clicked.connect(self.incStart)
-        self.increaseStart.animation.stop()
-        self.increaseStart.animation.start()
-        self.increaseStart.animation.setDuration(250)
+        setButton(self.increaseStart, "+", self.incStart)
+        # self.increaseStart.setText("+")
+        # self.increaseStart.setFont(BUTTONFONT)
+        # self.increaseStart.setStyleSheet(BUTTONSTYLE)
+        # self.increaseStart.setFixedSize(200, 200)
+        # self.increaseStart.clicked.connect(self.incStart)
+        # self.increaseStart.animation.stop()
+        # self.increaseStart.animation.start()
+        # self.increaseStart.animation.setDuration(250)
 
         self.decreaseStart = OpButton(self)
-        self.decreaseStart.setText("-")
-        self.decreaseStart.setFont(BUTTONFONT)
-        self.decreaseStart.setStyleSheet("font: bold; color: green; background-color: blue; border: none; border-radius: 40px")
-        self.decreaseStart.setFixedSize(200, 200)
-        self.decreaseStart.clicked.connect(self.decStart)
-        self.decreaseStart.animation.stop()
-        self.decreaseStart.animation.start()
-        self.decreaseStart.animation.setDuration(250)
+        setButton(self.decreaseStart, "-", self.decStart)
+        # self.decreaseStart.setText("-")
+        # self.decreaseStart.setFont(BUTTONFONT)
+        # self.decreaseStart.setStyleSheet(BUTTONSTYLE)
+        # self.decreaseStart.setFixedSize(200, 200)
+        # self.decreaseStart.clicked.connect(self.decStart)
+        # self.decreaseStart.animation.stop()
+        # self.decreaseStart.animation.start()
+        # self.decreaseStart.animation.setDuration(250)
 
         self.increaseEnd = OpButton(self)
-        self.increaseEnd.setText("+")
-        self.increaseEnd.setFont(BUTTONFONT)
-        self.increaseEnd.setStyleSheet("font: bold; color: green; background-color: blue; border: none; border-radius: 40px")
-        self.increaseEnd.setFixedSize(200, 200)
-        self.increaseEnd.clicked.connect(self.incEnd)
-        self.increaseEnd.animation.stop()
-        self.increaseEnd.animation.start()
-        self.increaseEnd.animation.setDuration(250)
+        setButton(self.increaseEnd, "+", self.incEnd)
+        # self.increaseEnd.setText("+")
+        # self.increaseEnd.setFont(BUTTONFONT)
+        # self.increaseEnd.setStyleSheet(BUTTONSTYLE)
+        # self.increaseEnd.setFixedSize(200, 200)
+        # self.increaseEnd.clicked.connect(self.incEnd)
+        # self.increaseEnd.animation.stop()
+        # self.increaseEnd.animation.start()
+        # self.increaseEnd.animation.setDuration(250)
 
         self.decreaseEnd = OpButton(self)
-        self.decreaseEnd.setText("-")
-        self.decreaseEnd.setFont(BUTTONFONT)
-        self.decreaseEnd.setStyleSheet("font: bold; color: green; background-color: blue; border: none; border-radius: 40px")
-        self.decreaseEnd.setFixedSize(200, 200)
-        self.decreaseEnd.clicked.connect(self.decEnd)
-        self.decreaseEnd.animation.stop()
-        self.decreaseEnd.animation.start()
-        self.decreaseEnd.animation.setDuration(250)                      
+        setButton(self.decreaseEnd, "-", self.decEnd)
+        # self.decreaseEnd.setText("-")
+        # self.decreaseEnd.setFont(BUTTONFONT)
+        # self.decreaseEnd.setStyleSheet(BUTTONSTYLE)
+        # self.decreaseEnd.setFixedSize(200, 200)
+        # self.decreaseEnd.clicked.connect(self.decEnd)
+        # self.decreaseEnd.animation.stop()
+        # self.decreaseEnd.animation.start()
+        # self.decreaseEnd.animation.setDuration(250)                      
 
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
@@ -103,15 +127,15 @@ class lighingScreen(QWidget):
 
         buttonsStart.addWidget(self.decreaseStart) # Add the humidity label to the humidity layout
         buttonsStart.addWidget(self.increaseStart) # Add the humidity amount to the humidity layout
-        buttonsStart.setSpacing(100)
+        buttonsStart.setSpacing((int(SIZE[0]/19.2)))
 
         buttonsEnd.addWidget(self.decreaseEnd) # Add the pressure label to the pressure layout
         buttonsEnd.addWidget(self.increaseEnd) # Add the pressure amount to the pressure layout
-        buttonsEnd.setSpacing(100)
+        buttonsEnd.setSpacing((int(SIZE[0]/19.2)))
 
         buttons.addItem(buttonsStart)
         buttons.addItem(buttonsEnd)
-        buttons.setSpacing(200)
+        buttons.setSpacing((int(SIZE[0]/9.6)))
 
         # Add all the label layouts to the main label layouts, this is done so they are grouped together nicely and easier to manage
         labels.addItem(duration) 
@@ -142,7 +166,7 @@ class lighingScreen(QWidget):
             self.startTime = (self.startTime + 1)
         self.duration = self.endTime - self.startTime
         self.label2.setText(str(self.duration))
-        self.startLabel.setText("start time: " + str(self.startTime) + ":00 am")
+        self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
     def decStart(self):
         self.decreaseStart.animation.stop()
@@ -151,7 +175,7 @@ class lighingScreen(QWidget):
             self.startTime = (self.startTime - 1)
         self.duration = self.endTime - self.startTime
         self.label2.setText(str(self.duration))
-        self.startLabel.setText("start time: " + str(self.startTime) + ":00 am")
+        self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
     def incEnd(self):
         self.increaseEnd.animation.stop()
@@ -161,7 +185,7 @@ class lighingScreen(QWidget):
             self.endTime = (self.endTime + 1)
         self.duration = self.endTime - self.startTime
         self.label2.setText(str(self.duration))
-        self.endLabel.setText("end time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
+        self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
     def decEnd(self):
         self.decreaseEnd.animation.stop()
@@ -171,4 +195,4 @@ class lighingScreen(QWidget):
             self.endTime = (self.endTime - 1)
         self.duration = self.endTime - self.startTime
         self.label2.setText(str(self.duration))
-        self.endLabel.setText("end time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
+        self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")

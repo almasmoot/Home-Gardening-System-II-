@@ -8,8 +8,9 @@ LABELFONT1 = QFont("times", 60) # font for the bigger labels (reservoir, tempera
 LABELFONT2 = QFont("times", 30) # font for the readings for the labels (60%)
 WB = 500 # Width buffer for the tabs
 HB = -65 # Hight buffer for the tabs
-MINNUTR = 200
-MAXNUTR = 400
+MINNUTR = 0
+MAXNUTR = 1500
+INTERVAL = 25
 
 class nutrientScreen(QWidget):
     def __init__(self, parent):

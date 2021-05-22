@@ -28,8 +28,9 @@ def setButton(button, text, func):
 class lighingScreen(QWidget):
     def __init__(self, parent):
         super(lighingScreen, self).__init__(parent)
-        self.startTime = 8
-        self.endTime = 20
+        self.par = parent
+        self.startTime = parent.StartTime
+        self.endTime = parent.EndTime
         self.duration = self.endTime - self.startTime
 
         self.initUI(parent)
@@ -63,47 +64,15 @@ class lighingScreen(QWidget):
 
         self.increaseStart = OpButton(self)
         setButton(self.increaseStart, "+", self.incStart)
-        # self.increaseStart.setText("+")
-        # self.increaseStart.setFont(BUTTONFONT)
-        # self.increaseStart.setStyleSheet(BUTTONSTYLE)
-        # self.increaseStart.setFixedSize(200, 200)
-        # self.increaseStart.clicked.connect(self.incStart)
-        # self.increaseStart.animation.stop()
-        # self.increaseStart.animation.start()
-        # self.increaseStart.animation.setDuration(250)
 
         self.decreaseStart = OpButton(self)
         setButton(self.decreaseStart, "-", self.decStart)
-        # self.decreaseStart.setText("-")
-        # self.decreaseStart.setFont(BUTTONFONT)
-        # self.decreaseStart.setStyleSheet(BUTTONSTYLE)
-        # self.decreaseStart.setFixedSize(200, 200)
-        # self.decreaseStart.clicked.connect(self.decStart)
-        # self.decreaseStart.animation.stop()
-        # self.decreaseStart.animation.start()
-        # self.decreaseStart.animation.setDuration(250)
 
         self.increaseEnd = OpButton(self)
         setButton(self.increaseEnd, "+", self.incEnd)
-        # self.increaseEnd.setText("+")
-        # self.increaseEnd.setFont(BUTTONFONT)
-        # self.increaseEnd.setStyleSheet(BUTTONSTYLE)
-        # self.increaseEnd.setFixedSize(200, 200)
-        # self.increaseEnd.clicked.connect(self.incEnd)
-        # self.increaseEnd.animation.stop()
-        # self.increaseEnd.animation.start()
-        # self.increaseEnd.animation.setDuration(250)
 
         self.decreaseEnd = OpButton(self)
-        setButton(self.decreaseEnd, "-", self.decEnd)
-        # self.decreaseEnd.setText("-")
-        # self.decreaseEnd.setFont(BUTTONFONT)
-        # self.decreaseEnd.setStyleSheet(BUTTONSTYLE)
-        # self.decreaseEnd.setFixedSize(200, 200)
-        # self.decreaseEnd.clicked.connect(self.decEnd)
-        # self.decreaseEnd.animation.stop()
-        # self.decreaseEnd.animation.start()
-        # self.decreaseEnd.animation.setDuration(250)                      
+        setButton(self.decreaseEnd, "-", self.decEnd)                   
 
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
@@ -164,8 +133,9 @@ class lighingScreen(QWidget):
         self.increaseStart.animation.start()
         if (self.startTime + 1 <= MAXTIME):
             self.startTime = (self.startTime + 1)
+            self.par.StartTime = self.startTime
         self.duration = self.endTime - self.startTime
-        self.label2.setText(str(self.duration))
+        self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
     def decStart(self):
@@ -173,26 +143,27 @@ class lighingScreen(QWidget):
         self.decreaseStart.animation.start()
         if (self.startTime - 1 >= MINTIME):
             self.startTime = (self.startTime - 1)
+            self.par.StartTime = self.startTime
         self.duration = self.endTime - self.startTime
-        self.label2.setText(str(self.duration))
+        self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
     def incEnd(self):
         self.increaseEnd.animation.stop()
         self.increaseEnd.animation.start()
-        
         if (((self.endTime + 1) % 12) <= MAXTIME):
             self.endTime = (self.endTime + 1)
+            self.par.EndTime = self.endTime
         self.duration = self.endTime - self.startTime
-        self.label2.setText(str(self.duration))
+        self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
     def decEnd(self):
         self.decreaseEnd.animation.stop()
         self.decreaseEnd.animation.start()
-
         if (((self.endTime - 1) % 12) >= MINTIME):
             self.endTime = (self.endTime - 1)
+            self.par.EndTime = self.endTime
         self.duration = self.endTime - self.startTime
-        self.label2.setText(str(self.duration))
+        self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")

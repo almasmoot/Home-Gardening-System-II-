@@ -1,11 +1,10 @@
 from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-# from Qt_UI import SIZE
 
 SIZE = (480, 800)
 
-FONT = "Cambria"
+FONT = "Cambria" # font for the text
 
 BUTTONFONT = (QFont(FONT, (int(SIZE[0]/16)))) # font for the tabs
 LABELFONT1 = (QFont(FONT, (int(SIZE[0]/16)))) # font for the bigger labels (reservoir, temperature)
@@ -13,58 +12,38 @@ LABELFONT2 = (QFont(FONT, (int(SIZE[0]/32)))) # font for the readings for the la
 
 STYLE = "font: bold; color: white;"
 
+def makeLabel(label, text, font, style):
+    label.setText(text)        # Set the text                                         
+    label.setFont(font)         # Set the font for the label                           
+    label.setAlignment(Qt.AlignCenter)# This will align it to the center    
+    label.setStyleSheet(style)  # Set the style of the label
+
 class homeScreen(QWidget):
     def __init__(self, parent):
         super(homeScreen, self).__init__(parent)
         self.initUI(parent)
 
-        
-
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
 
         self.Reservoir = QLabel(self)              # Make the Reservoir label                             
-        self.Reservoir.setText("Reservoir")        # Set the text                                         
-        self.Reservoir.setFont(LABELFONT1)         # Set the font for the label                           
-        self.Reservoir.setAlignment(Qt.AlignCenter)# This will align it to the center    
-        self.Reservoir.setStyleSheet(STYLE)                    
+        makeLabel(self.Reservoir, "Reservoir", LABELFONT1, STYLE)   
         self.R_amount = QLabel(self)               # Make the Reservoir amount label                      
-        self.R_amount.setText("60%")               # set the text (this should implement a variable later)
-        self.R_amount.setFont(LABELFONT2)          # set the font                                          
-        self.R_amount.setAlignment(Qt.AlignCenter) # align it in the center   
-        self.R_amount.setStyleSheet(STYLE)                                 
+        makeLabel(self.R_amount, (str(parent.ResAmt) + " %"), LABELFONT2, STYLE )                   
 
         self.Temperature = QLabel(self)              # Make the Temperature label                             
-        self.Temperature.setText("Temperature")      # Set the text                                         
-        self.Temperature.setFont(LABELFONT1)         # Set the font for the label                           
-        self.Temperature.setAlignment(Qt.AlignCenter)# This will align it to the center  
-        self.Temperature.setStyleSheet(STYLE)                     
+        makeLabel(self.Temperature, "Temperature", LABELFONT1, STYLE)                    
         self.T_amount = QLabel(self)                 # Make the Temperature amount label                      
-        self.T_amount.setText("75 F")                # set the text (this should implement a variable later)
-        self.T_amount.setFont(LABELFONT2)            # set the font                                          
-        self.T_amount.setAlignment(Qt.AlignCenter)   # align it in the center        
-        self.T_amount.setStyleSheet(STYLE)                          
+        makeLabel(self.T_amount, (str(parent.TmpAmt)+ "°F"), LABELFONT2, STYLE)                         
 
         self.Humidity = QLabel(self)              # Make the Humidity label                             
-        self.Humidity.setText("Humidity")         # Set the text                                          
-        self.Humidity.setFont(LABELFONT1)         # Set the font for the label                           
-        self.Humidity.setAlignment(Qt.AlignCenter)# This will align it to the center 
-        self.Humidity.setStyleSheet(STYLE)                      
+        makeLabel(self.Humidity, "Humidity", LABELFONT1, STYLE)                    
         self.H_amount = QLabel(self)              # Make the Humidity amount label                      
-        self.H_amount.setText("50%")              # set the text (this should implement a variable later)
-        self.H_amount.setFont(LABELFONT2)         # set the font                                          
-        self.H_amount.setAlignment(Qt.AlignCenter)# align it in the center          
-        self.H_amount.setStyleSheet(STYLE)                       
+        makeLabel(self.H_amount, (str(parent.HumAmt) + " %"), LABELFONT2, STYLE)                      
 
         self.Pressure = QLabel(self)              # Make the Pressure label                             
-        self.Pressure.setText("Pressure")         # Set the text                                         
-        self.Pressure.setFont(LABELFONT1)         # Set the font for the label                           
-        self.Pressure.setAlignment(Qt.AlignCenter)# This will align it to the center 
-        self.Pressure.setStyleSheet(STYLE)                      
+        makeLabel(self.Pressure, "Pressure", LABELFONT1, STYLE)                     
         self.P_amount = QLabel(self)              # Make the Pressure amount label                      
-        self.P_amount.setText("80 PSI")           # set the text (this should implement a variable later) 
-        self.P_amount.setFont(LABELFONT2)         # set the font                                          
-        self.P_amount.setAlignment(Qt.AlignCenter)# align it in the center   
-        self.P_amount.setStyleSheet(STYLE)                              
+        makeLabel(self.P_amount, (str(parent.PrsAmt) + " PSI"), LABELFONT2, STYLE)                             
 
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
@@ -72,8 +51,9 @@ class homeScreen(QWidget):
         temLab = QVBoxLayout()  # Make the layout for the Temperature
         humLab = QVBoxLayout()  # Make the layout for the Humidity
         presLab = QVBoxLayout() # Make the layout for the Pressure
-        row1 = QHBoxLayout()
-        row2 = QHBoxLayout()
+        # these will allow for the labels to be in four corners instead of stacked
+        row1 = QHBoxLayout()    
+        row2 = QHBoxLayout()    
         
         columns = QHBoxLayout() # This will be the main layout
         columns.setContentsMargins(0,0,0,0)  # This will remove the margin around the layouts, making the tabs reach the edge of the screen.
@@ -93,6 +73,7 @@ class homeScreen(QWidget):
         presLab.addWidget(self.Pressure) # Add the pressure label to the pressure layout
         presLab.addWidget(self.P_amount) # Add the pressure amount to the pressure layout
 
+        # add the labels to the rows they will be in
         row1.addItem(resLab)
         row1.addItem(temLab)
         row2.addItem(humLab)
@@ -101,8 +82,6 @@ class homeScreen(QWidget):
         # Add all the label layouts to the main label layouts, this is done so they are grouped together nicely and easier to manage
         labels.addItem(row1) 
         labels.addItem(row2) 
-        # labels.addItem(humLab) 
-        # labels.addItem(presLab)
         
         # Add the tabs to the tabs layout
         tabs.addWidget(parent.Home)

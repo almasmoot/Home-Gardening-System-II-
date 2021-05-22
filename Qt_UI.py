@@ -21,6 +21,7 @@ BACKGROUNDCOLOR = "rgb(107,138,116)" #    rgb(74,223,0)
 
 STYLE = "background-color: rgb(255,255,255); border: none; font: bold; color: " + BACKGROUNDCOLOR + ";"   # rgb(58,99,70)
 STYLE2 = "background-color: " + BACKGROUNDCOLOR + "; border: none; font: bold; color: white;"
+STYLE3 = "background-color: " + BACKGROUNDCOLOR + "; border: 2px solid white; font: bold; color: white;"
 
 
 
@@ -40,6 +41,24 @@ class MainWindow(QMainWindow):  # Main window for the gui
         self.setWindowFlag(Qt.FramelessWindowHint)  # if we want a framless window uncomment this code
         self.BACKGROUNDCOLOR = BACKGROUNDCOLOR
         self.STYLE = STYLE
+        
+        # changing these will change the values on the home screen
+        self.ResAmt = 100
+        self.TmpAmt = 70
+        self.HumAmt = 80
+        self.PrsAmt = 80
+
+        # values for the misting screen
+        self.MistIntrv = 2
+        self.MistSec = 0
+
+        # values for the lighting screen
+        self.StartTime = 8
+        self.EndTime = 20
+
+        # values for the nutrients screen
+        self.NutrAmt = 300
+
         self.startHome()
 
     def startHome(self):

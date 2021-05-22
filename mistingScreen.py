@@ -18,7 +18,7 @@ MAXINTERVAL = 6
 BUTTONSTYLE = "font: bold; background-color: white; border: none; border-radius: 40px; color: rgb(107,138,116)" # rgb(93,173,236)
 BUTTONSIZE = 100, 100
 
-def ButtonSize(button, text, func):
+def setButton(button, text, func):
     button.setStyleSheet(BUTTONSTYLE)
     button.setFont(BUTTONFONT)
     button.setText(text)
@@ -31,9 +31,10 @@ def ButtonSize(button, text, func):
 class mistingScreen(QWidget):  # this is the class that will have all the fucntions, labels and a buttons for the misting screen
     def __init__(self, parent):   # initialize function
         super(mistingScreen, self).__init__(parent)
-        self.effect = QGraphicsOpacityEffect(self)
-        self.intervalmin = 2  # interval variable in minutes
-        self.sec = 0
+        # self.effect = QGraphicsOpacityEffect(self)
+        self.par = parent
+        self.intervalmin = parent.MistIntrv  # interval variable in minutes
+        self.sec = parent.MistSec
         self.initUI(parent)  # initalize the ui
 
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
@@ -52,11 +53,11 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
         self.label2.setStyleSheet("font: bold; color: white;")
 
         self.increase = OpButton()                                                            # this will make a push button                     
-        ButtonSize(self.increase, "+", self.inc)
+        setButton(self.increase, "+", self.inc)
     
 
         self.decrease = OpButton()                                                            # this will make a push button                                                         
-        ButtonSize(self.decrease, "-", self.dec)                                                   
+        setButton(self.decrease, "-", self.dec)                                                   
 
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
@@ -102,8 +103,10 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
         
         if (not(self.intervalmin == MAXINTERVAL)):
             self.sec = ((self.sec + 15) % 60)
+            self.par.MistSec = self.sec
         if (self.sec % 60 == 0 and self.intervalmin < MAXINTERVAL):
             self.intervalmin = self.intervalmin + 1
+            self.par.MistIntrv = self.intervalmin
         self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes")
         
 
@@ -114,6 +117,8 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
 
         if (not(self.intervalmin == MININTERVAL and self.sec == 0)):
             self.sec = ((self.sec - 15) % 60)
+            self.par.MistSec = self.sec
         if ((self.sec + 15) % 60 == 0 and self.intervalmin > MININTERVAL):
             self.intervalmin = self.intervalmin - 1
+            self.par.MistIntrv = self.intervalmin
         self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes")

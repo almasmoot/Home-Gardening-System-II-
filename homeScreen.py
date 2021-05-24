@@ -1,6 +1,8 @@
-from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
+from PyQt5.QtCore import Qt, QTimer     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from generate_test_json import generate_new_data
+import json
 
 SIZE = (480, 800)
 
@@ -21,7 +23,14 @@ def makeLabel(label, text, font, style):
 class homeScreen(QWidget):
     def __init__(self, parent):
         super(homeScreen, self).__init__(parent)
+        self.par = parent
         self.initUI(parent)
+
+        timer = QTimer(self)
+
+        timer.timeout.connect(self.updateVariables)
+
+        timer.start(60000) # 1 minute = 60000
 
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
 
@@ -98,3 +107,20 @@ class homeScreen(QWidget):
 
         # make the screen maximized when it starts
         self.showMaximized()
+        
+    def updateVariables(self):
+        generate_new_data()
+
+        data = open("test_data.json", "r").read()
+
+        data = json.loads(data)
+
+        self.par.ResAmt = data.get("water_level")
+        self.par.TmpAmt = data.get("temp")
+        self.par.HumAmt = data.get("humidity")
+        self.par.PrsAmt = data.get("water_pressure")
+
+        self.R_amount.setText(str(self.par.ResAmt) + "%")
+        self.T_amount.setText(str(self.par.TmpAmt) + "°F")
+        self.H_amount.setText(str(self.par.HumAmt) + "%")
+        self.P_amount.setText(str(self.par.PrsAmt) + "PSI")

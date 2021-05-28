@@ -139,11 +139,12 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
         
-        json_data = open("other_test_data.json", "r+").read()
-        data = json.loads(json_data)
-        data["start_time"] = self.startTime
-        #_ = open("other_test_data.json", 'w').write(json.dumps(data))
-        print(json.dumps(data))
+        with open("other_test_data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("other_test_data.json", "w") as data:
+            json_data["start_time"] = self.startTime
+            data.write(json.dumps(json_data))
 
     def decStart(self):
         self.decreaseStart.animation.stop()
@@ -155,11 +156,12 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
-        json_data = open("other_test_data.json", "r+").read()
-        data = json.loads(json_data)
-        data["start_time"] = self.startTime
-        #_ = open("other_test_data.json", 'w').write(json.dumps(data))
-        print(json.dumps(data))
+        with open("other_test_data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("other_test_data.json", "w") as data:
+            json_data["start_time"] = self.startTime
+            data.write(json.dumps(json_data))
 
     def incEnd(self):
         self.increaseEnd.animation.stop()
@@ -171,11 +173,12 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
-        json_data = open("other_test_data.json", "r+").read()
-        data = json.loads(json_data)
-        data["end_time"] = self.endTime
-        #_ = open("other_test_data.json", 'w').write(json.dumps(data))
-        print(json.dumps(data))
+        with open("other_test_data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("other_test_data.json", "w") as data:
+            json_data["end_time"] = self.endTime
+            data.write(json.dumps(json_data))
 
     def decEnd(self):
         self.decreaseEnd.animation.stop()
@@ -187,8 +190,9 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
-        json_data = open("other_test_data.json", "r+").read()
-        data = json.loads(json_data)
-        data["end_time"] = self.endTime
-        #_ = open("other_test_data.json", 'w').write(json.dumps(data))
-        print(json.dumps(data))
+        with open("other_test_data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("other_test_data.json", "w") as data:
+            json_data["end_time"] = self.endTime
+            data.write(json.dumps(json_data))

@@ -30,7 +30,7 @@ class homeScreen(QWidget):
 
         timer.timeout.connect(self.updateVariables)
 
-        timer.start(60000) # 1 minute = 60000
+        timer.start(1000) # 1 minute = 60000
 
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
 
@@ -111,16 +111,17 @@ class homeScreen(QWidget):
     def updateVariables(self):
         generate_new_data()
 
-        data = open("test_data.json", "r").read()
+        #Use with statement
+        with open("test_data.json", "r") as data:
 
-        data = json.loads(data)
+            json_data = json.loads(data.read())
 
-        self.par.ResAmt = data.get("water_level")
-        self.par.TmpAmt = data.get("temp")
-        self.par.HumAmt = data.get("humidity")
-        self.par.PrsAmt = data.get("water_pressure")
+            self.par.ResAmt = json_data.get("water_level")
+            self.par.TmpAmt = json_data.get("temp")
+            self.par.HumAmt = json_data.get("humidity")
+            self.par.PrsAmt = json_data.get("water_pressure")
 
-        self.R_amount.setText(str(self.par.ResAmt) + "%")
-        self.T_amount.setText(str(self.par.TmpAmt) + "°F")
-        self.H_amount.setText(str(self.par.HumAmt) + "%")
-        self.P_amount.setText(str(self.par.PrsAmt) + "PSI")
+            self.R_amount.setText(str(self.par.ResAmt) + "%")
+            self.T_amount.setText(str(self.par.TmpAmt) + "°F")
+            self.H_amount.setText(str(self.par.HumAmt) + "%")
+            self.P_amount.setText(str(self.par.PrsAmt) + "PSI")

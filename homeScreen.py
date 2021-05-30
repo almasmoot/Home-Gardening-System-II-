@@ -112,16 +112,17 @@ class homeScreen(QWidget):
         generate_new_data()
 
         #Use with statement
-        with open("test_data.json", "r") as data:
+        with open("data.json", "r") as data:
 
             json_data = json.loads(data.read())
 
-            self.par.ResAmt = json_data.get("water_level")
-            self.par.TmpAmt = json_data.get("temp")
-            self.par.HumAmt = json_data.get("humidity")
-            self.par.PrsAmt = json_data.get("water_pressure")
+            self.par.ResAmt = json_data["home_screen"].get("water_level")
+            self.par.TmpAmt = json_data["home_screen"].get("temp")
+            self.par.HumAmt = json_data["home_screen"].get("humidity")
+            self.par.PrsAmt = json_data["home_screen"].get("water_pressure")
 
             self.R_amount.setText(str(self.par.ResAmt) + "%")
             self.T_amount.setText(str(self.par.TmpAmt) + "°F")
             self.H_amount.setText(str(self.par.HumAmt) + "%")
             self.P_amount.setText(str(self.par.PrsAmt) + "PSI")
+        

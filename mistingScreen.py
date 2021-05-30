@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from OpButton import OpButton
+import json
 
 SIZE = (480, 800)
 
@@ -108,6 +109,14 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
             self.intervalmin = self.intervalmin + 1
             self.par.MistIntrv = self.intervalmin
         self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes")
+
+        with open("data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("data.json", "w") as data:
+            json_data["misting_screen"]["duration_min"] = self.intervalmin
+            json_data["misting_screen"]["duration_sec"] = self.sec
+            data.write(json.dumps(json_data))
         
 
     # decrement the interval, this funtion will decrease the misting interval by 1, (in minutes)
@@ -122,3 +131,11 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
             self.intervalmin = self.intervalmin - 1
             self.par.MistIntrv = self.intervalmin
         self.label2.setText("every " + str(self.intervalmin) + ":" + str('00' if(self.sec == 0) else self.sec) + " minutes")
+
+        with open("data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("data.json", "w") as data:
+            json_data["misting_screen"]["duration_min"] = self.intervalmin
+            json_data["misting_screen"]["duration_sec"] = self.sec
+            data.write(json.dumps(json_data))

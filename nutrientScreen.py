@@ -5,6 +5,7 @@ from PyQt5.QtCore import QSize, Qt, qSetFieldWidth     # all the pyqt5 libraries
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from OpButton import OpButton
+import json
 
 SIZE = (480, 800)
 
@@ -136,6 +137,7 @@ class nutrientScreen(QWidget):
         self.slider.setValue(int(self.nutrAmount / (int(INTERVAL))))
 
         self.amount.setText(str(self.nutrAmount) + " ppm")
+        self.updateVariables(self.nutrAmount)
 
     def dec(self):
         self.decrement.animation.stop()
@@ -146,9 +148,19 @@ class nutrientScreen(QWidget):
         self.slider.setValue(int(self.nutrAmount / (int(INTERVAL))))
 
         self.amount.setText(str(self.nutrAmount) + " ppm")
+        self.updateVariables(self.nutrAmount)
     
     def slide(self, value):
         
         self.nutrAmount = value * INTERVAL
         self.par.NutrAmt = self.nutrAmount
         self.amount.setText(str(self.nutrAmount) + " ppm")
+        self.updateVariables(self.nutrAmount)
+
+    def updateVariables(self, value):
+        with open("data.json", "r") as data:
+            json_data = data.read()
+            json_data = json.loads(json_data)
+        with open("data.json", "w") as data:
+            json_data["nutrient_screen"]["ppm"] = value
+            data.write(json.dumps(json_data))

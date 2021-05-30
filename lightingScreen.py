@@ -139,11 +139,11 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
         
-        with open("other_test_data.json", "r") as data:
+        with open("data.json", "r") as data:
             json_data = data.read()
             json_data = json.loads(json_data)
-        with open("other_test_data.json", "w") as data:
-            json_data["start_time"] = self.startTime
+        with open("data.json", "w") as data:
+            json_data["lighting_screen"]["start_time"] = self.startTime
             data.write(json.dumps(json_data))
 
     def decStart(self):
@@ -156,11 +156,11 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
-        with open("other_test_data.json", "r") as data:
+        with open("data.json", "r") as data:
             json_data = data.read()
             json_data = json.loads(json_data)
-        with open("other_test_data.json", "w") as data:
-            json_data["start_time"] = self.startTime
+        with open("data.json", "w") as data:
+            json_data["lighting_screen"]["start_time"] = self.startTime
             data.write(json.dumps(json_data))
 
     def incEnd(self):
@@ -173,11 +173,11 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
-        with open("other_test_data.json", "r") as data:
+        with open("data.json", "r") as data:
             json_data = data.read()
             json_data = json.loads(json_data)
-        with open("other_test_data.json", "w") as data:
-            json_data["end_time"] = self.endTime
+        with open("data.json", "w") as data:
+            json_data["lighting_screen"]["end_time"] = self.endTime
             data.write(json.dumps(json_data))
 
     def decEnd(self):
@@ -190,9 +190,9 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
-        with open("other_test_data.json", "r") as data:
+        with open("data.json", "r") as data:
             json_data = data.read()
             json_data = json.loads(json_data)
-        with open("other_test_data.json", "w") as data:
-            json_data["end_time"] = self.endTime
+        with open("data.json", "w") as data:
+            json_data["lighting_screen"]["end_time"] = self.endTime
             data.write(json.dumps(json_data))

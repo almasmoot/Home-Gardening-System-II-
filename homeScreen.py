@@ -4,6 +4,9 @@ from PyQt5.QtGui import *
 from generate_test_json import generate_new_data
 import json
 
+CRITICAL = "CRITICAL"
+WARNING = "WARNING"
+
 SIZE = (480, 800)
 
 FONT = "Cambria" # font for the text
@@ -97,6 +100,7 @@ class homeScreen(QWidget):
         tabs.addWidget(parent.Misting)
         tabs.addWidget(parent.Lighting)
         tabs.addWidget(parent.Nutrients)
+        tabs.addWidget(parent.preSet)
         
         # Add the tabs and labels to the main layout
         columns.addItem(tabs)
@@ -125,4 +129,14 @@ class homeScreen(QWidget):
             self.T_amount.setText(str(self.par.TmpAmt) + "°F")
             self.H_amount.setText(str(self.par.HumAmt) + "%")
             self.P_amount.setText(str(self.par.PrsAmt) + "PSI")
-        
+
+            if (self.par.ResAmt < 33):
+                self.par.level = WARNING
+            elif (self.par.ResAmt < 10):
+                self.par.level = CRITICAL
+            elif (65 < self.par.TmpAmt < 55):
+                self.par.level = WARNING
+            elif (70 < self.par.TmpAmt < 50):
+                self.par.level = CRITICAL
+            else:
+                self.par.level = "working"

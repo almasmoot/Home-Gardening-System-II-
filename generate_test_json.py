@@ -24,5 +24,12 @@ def generate_new_data():
         },
     }
 
-    with open("data.json", "w") as fileHandler:
-        fileHandler.write(json.dumps(data))
+    # with open("data.json", "w") as fileHandler:
+    #     fileHandler.write(json.dumps(data))
+    #     "water_level": random.randrange(10, 100),
+    #     "temp": random.randrange(49, 71),
+    #     "humidity": random.randrange(0, 100),
+    #     "water_pressure": random.randrange(0, 100)
+    # }
+
+    # open("test_data.json", "w").write(json.dumps(data))

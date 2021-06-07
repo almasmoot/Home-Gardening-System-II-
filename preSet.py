@@ -20,6 +20,8 @@ BUTTONSTYLE = "font: bold; color: rgb(107,138,116); background-color: white; bor
 
 STYLE = "font: bold; color: white;"
 
+NUMLABELS = 4
+
 def setButton(button, text, func, width, height):
     button.setStyleSheet(BUTTONSTYLE)
     button.setFont(BUTTONFONT)
@@ -33,8 +35,12 @@ def setButton(button, text, func, width, height):
 def makeLabel(label, text, font, style):
     label.setText(text)        # Set the text                                         
     label.setFont(font)         # Set the font for the label                           
-    # label.setAlignment(Qt.AlignCenter)# This will align it to the center    
+    label.setAlignment(Qt.AlignCenter)# This will align it to the center    
     label.setStyleSheet(style)  # Set the style of the label
+    label.setFixedHeight(100)
+    # label.QSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
+    # PySide2.QtWidgets.QSizePolicy.setVerticalPolicy(d)
+
 
 class preSet(QScrollArea):
     def __init__(self, parent, *args, **kwargs):
@@ -62,17 +68,40 @@ class preSet(QScrollArea):
         setButton(self.hot, "Hot", self.hotP, 200, 120)
         
         columns = QHBoxLayout() # This will be the main layout
-        self.container = QWidget(self)
-        self.container.setStyleSheet("background-color: blue")
-        self.container.setGeometry(200, 150, 550, 300)
+        # self.container = QWidget(self)
+        # self.container.setStyleSheet("background-color: blue")
+        # self.container.setGeometry(200, 150, 550, 300)
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
-        plantLst = QVBoxLayout(self.container)  # Make the layout for the Reservoir
-        plantLst.setSpacing(10)
+        # plantLst = QVBoxLayout(self.container)  # Make the layout for the Reservoir
+        # plantLst.setSpacing(10)
         # plantLst.setAlignment(Qt.AlignCenter)
         # plantLst.setGeometry(0, 0, 50, 50)
         plantBtn = QHBoxLayout()
         sliderLay = QHBoxLayout()
+        list_widget = QListWidget(self)
+        # list_widget.setFixedSize(600, 200) # width, height\
+        list_widget.setStyleSheet("background-color: white")
+        list_widget.setFont(LABELFONT1)
+        list_widget.setGeometry(220, 180, 520, 240)
+        scollBar = QScrollBar()
+        scollBar.setMinimumWidth(60)
+        scollBar.setStyleSheet("""QSlider::groove:vertical {
+                                            border: 0px solid #bbb;
+                                            background: white;
+                                            height: 30px;
+                                            border-radius: 15px;
+                                        }
+                                            QSlider::handle:vertical {
+                                            background: rgb(107,138,116);
+                                            border: 5px solid #fff;
+                                            width: 70px;
+                                            margin-top: -20px;
+                                            margin-bottom: -20px;
+                                            border-radius: 35px;
+                                        }
+                                    """)
+        list_widget.setVerticalScrollBar(scollBar)
         # self.scroller = QScrollArea()
         
 
@@ -87,8 +116,10 @@ class preSet(QScrollArea):
                 # self.numPlants[line].se
                 # self.plants[line] = QLabel(self)
                 makeLabel(self.numPlants[line], text, LABELFONT1, STYLE)
-                plantLst.addWidget(self.numPlants[line])
-                self.numPlants[line].move(0, 70)
+                # plantLst.addWidget(self.numPlants[line])
+                item = QListWidgetItem(text)
+                item.setTextAlignment(Qt.AlignHCenter)
+                list_widget.addItem(item)
 
 
         # self.container.setLayout(plantBtn)
@@ -146,7 +177,7 @@ class preSet(QScrollArea):
         # content.setLayout(plantLst)
         # spacer = QSpacerItem(300, 350, QSizePolicy.Minimum, QSizePolicy.Minimum)
         labels.addItem(plantBtn)
-        labels.addItem(sliderLay2)
+        # labels.addWidget(list_widget)
         # labels.addSpacerItem(spacer)
         # labels.addWidget(content) 
         

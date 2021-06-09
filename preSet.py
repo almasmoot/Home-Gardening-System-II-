@@ -80,27 +80,18 @@ class preSet(QScrollArea):
         plantBtn = QHBoxLayout()
         sliderLay = QHBoxLayout()
         list_widget = QListWidget(self)
-        # list_widget.setFixedSize(600, 200) # width, height\
+        # list_widget.setFixedSize(600, 200) # width, height
         list_widget.setStyleSheet("background-color: white")
         list_widget.setFont(LABELFONT1)
-        list_widget.setGeometry(220, 180, 520, 240)
+        list_widget.setGeometry(220, 180, 520, 200)
         scollBar = QScrollBar()
-        scollBar.setMinimumWidth(60)
-        scollBar.setStyleSheet("""QSlider::groove:vertical {
-                                            border: 0px solid #bbb;
-                                            background: white;
-                                            height: 30px;
-                                            border-radius: 15px;
-                                        }
-                                            QSlider::handle:vertical {
-                                            background: rgb(107,138,116);
-                                            border: 5px solid #fff;
-                                            width: 70px;
-                                            margin-top: -20px;
-                                            margin-bottom: -20px;
-                                            border-radius: 35px;
-                                        }
-                                    """)
+        # scollBar.setMinimumWidth(60)
+        # "QScrollBar::handle:vertical {width: 60px; height: 60; background-color: green; border-radius: 10}"
+        scollBar.setStyleSheet("QScrollBar:vertical {margin: -20px -20px -20px -20px}"+"QScrollBar::handle:vertical {"
+                                +"width: 60px;"
+                                +"height: 60px;"
+                                +"background-color: green;"
+                                +"border-radius: 10}")
         list_widget.setVerticalScrollBar(scollBar)
         # self.scroller = QScrollArea()
         

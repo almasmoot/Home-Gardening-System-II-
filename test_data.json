@@ -1,1 +1,1 @@
-{"water_level": 10, "temp": 64, "humidity": 91, "water_pressure": 96}
+{"home_screen": {"water_level": 21, "temp": 66, "humidity": 39, "water_pressure": 71}, "lighting_screen": {"start_time": 6, "end_time": 20}, "nutrient_screen": {"ppm": 875}, "misting_screen": {"duration_min": 3, "duration_sec": 15}}

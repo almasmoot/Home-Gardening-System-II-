@@ -166,7 +166,7 @@ class MainWindow(QMainWindow):  # Main window for the gui
 if __name__=='__main__':
     #start the bluetooth client
     client = ClientBluetooth()
-    #start_new_thread(, ())
+    # start_new_thread(, ())
     x = threading.Thread(target=client.send_and_recieve_data, args=())
     x.start()
 
@@ -176,7 +176,5 @@ if __name__=='__main__':
     # size = screen.size()  # With the screen we can get the screen size and base the tabs off of that
     win = MainWindow()    # Make the main window
     win.show()              # shows the main window
-    sys.exit(app.exec_()) # on exit
-
     sys.exit(app.exec_()) # on exit
     x.join()

@@ -16,15 +16,16 @@ FONT = "Cambria" # font for the text
 BUTTONFONT = (QFont(FONT, (int(SIZE[0]/16)))) # font for the tabs
 LABELFONT1 = (QFont(FONT, (int(SIZE[0]/16)))) # font for the bigger labels (reservoir, temperature)
 LABELFONT2 = (QFont(FONT, (int(SIZE[0]/32)))) # font for the readings for the labels (60%)
-BUTTONSTYLE = "font: bold; color: rgb(107,138,116); background-color: white; border: none; border-radius: 40px" # rgb(93,173,236)
+BUTTONSTYLE = "font: bold; color: rgb(107,138,116); background-color: white; border: none; border-radius: 30px" # rgb(93,173,236)
+BUTTONSTYLE2 = "font: bold; color: rgb(107,138,116); background-color: white; border: none; border-radius: 25px" # rgb(93,173,236)
 
 STYLE = "font: bold; color: white;"
 
 NUMLABELS = 4
 
-def setButton(button, text, func, width, height):
-    button.setStyleSheet(BUTTONSTYLE)
-    button.setFont(BUTTONFONT)
+def setButton(button, text, func, width, height, style, font):
+    button.setStyleSheet(style)
+    button.setFont(font)
     button.setText(text)
     button.clicked.connect(func)
     button.setFixedSize(width, height)                                                  # this will set the size of the button     
@@ -59,13 +60,13 @@ class preSet(QScrollArea):
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
 
         self.cold = OpButton()
-        setButton(self.cold, "Cold", self.coldP, 200, 120)
+        setButton(self.cold, "Cold", self.coldP, 200, 120, BUTTONSTYLE, BUTTONFONT)
 
         self.warm = OpButton()
-        setButton(self.warm, "Warm", self.warmP, 200, 120)
+        setButton(self.warm, "Warm", self.warmP, 200, 120, BUTTONSTYLE, BUTTONFONT)
 
         self.hot = OpButton()
-        setButton(self.hot, "Hot", self.hotP, 200, 120)
+        setButton(self.hot, "Hot", self.hotP, 200, 120, BUTTONSTYLE, BUTTONFONT)
         
         columns = QHBoxLayout() # This will be the main layout
         # self.container = QWidget(self)
@@ -74,22 +75,26 @@ class preSet(QScrollArea):
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
         textBox = QLineEdit()
-        textBox.setStyleSheet("background-color: white; border-radius: 4px")
-        textBox.setFixedSize(400, 60)
-        textBox.setFont(LABELFONT1)
-        textSubmit = OpButton()
-        setButton(textSubmit, "Add", self.addPlant, 100, 60)
+        textBox.setStyleSheet("background-color: white; border-radius: 25px")
+        textBox.setFixedSize(400, 50)
+        textBox.setFont(LABELFONT2)
+        self.textSubmit = OpButton()
+        setButton(self.textSubmit, "Add", self.addPlant, 100, 50, BUTTONSTYLE2, LABELFONT2)
         textLay = QHBoxLayout()
         textLay.setSpacing(20)
         plantLst = QListWidget()  # Make the layout for the Reservoir
         # plantLst.setGeometry(220, 180, 540, 220)
         listLay = QVBoxLayout()
-        listLay.setContentsMargins(50, 50, 50, 50)
+        listLay.setContentsMargins(50, 20, 50, 20) # left top right bottom
         # plantLst.setTextA(Qt.AlignCenter)
         scrollBar = QScrollBar()
-        scrollBar.setStyleSheet("QScrollBar:vertical {width: 30px; margin: 5px 3px 5px 3px; border: 1px #2A2929; border-radius: 4px; background-color: blue solid;} QScrollBar::handle:vertical {max-height: 15px; background-color: green; border-radius: 3px;} QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {background: none;}")
+        scrollBar.setMinimum(0)
+        scrollBar.setMaximum(2000)
+        scrollBar.setStyleSheet("QScrollBar:vertical {width: 30px; margin: 5px 3px 5px 3px; border: 1px #2A2929; border-radius: 4px; background-color: blue solid;} "
+                                + "QScrollBar::handle:vertical {max-height: 15px; background-color: green; border-radius: 3px;}" 
+                                + " QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {background: none;}")
         plantLst.setVerticalScrollBar(scrollBar)
-        plantLst.setStyleSheet("background-color: white")
+        plantLst.setStyleSheet("background-color: white; border-radius: 25px;")
         # plantLst.setSpacing(10)
 
         # plantLst.setAlignment(Qt.AlignCenter)
@@ -107,7 +112,7 @@ class preSet(QScrollArea):
             for line in range(0, len(self.plants)):
                 text = self.plants[line].replace(',', '')
                 item = QListWidgetItem(text)
-                item.setFont(LABELFONT1)
+                item.setFont(LABELFONT2)
                 item.setTextAlignment(Qt.AlignCenter)
                 # self.numPlants.append(QLabel())
                 # self.numPlants[line].se
@@ -158,22 +163,25 @@ class preSet(QScrollArea):
         plantBtn.addWidget(self.cold)
         plantBtn.addWidget(self.warm)
         plantBtn.addWidget(self.hot)
-        plantBtn.setAlignment(Qt.AlignTop)
+        plantBtn.setAlignment(Qt.AlignCenter)
+        plantBtn.setContentsMargins(0, 10, 0, 0)
         plantBtn.setSpacing(15)
         
         
         columns.setContentsMargins(0,0,0,0)  # This will remove the margin around the layouts, making the tabs reach the edge of the screen.
         # labels.setSpacing(int(SIZE[1]/6.4))                # This sets the spacing betweent the groups of labels, example: both reservoir labels will be close
                                              # while the space between the reservoir labels and the temperature lebels will be 60
-        labels.setAlignment(Qt.AlignTop) # Further align all the labels in the center
+        labels.setAlignment(Qt.AlignVCenter) # Further align all the labels in the center
         # labels.setSpacing()
 
         # add the labels to the rows they will be in
         # content.setLayout(plantLst)
         # spacer = QSpacerItem(300, 350, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        # labels.setSpacing(20)
         textLay.addWidget(textBox)
-        textLay.addWidget(textSubmit)
+        textLay.addWidget(self.textSubmit)
         textLay.setAlignment(Qt.AlignCenter)
+        textLay.setContentsMargins(0, 0, 0, 10)
         listLay.addWidget(plantLst)
         labels.addItem(plantBtn)
         labels.addItem(listLay)
@@ -221,7 +229,8 @@ class preSet(QScrollArea):
         pass
 
     def addPlant(self):
-        pass
+        self.textSubmit.animation.stop()
+        self.textSubmit.animation.start()
 
     def setList(self, file):
         self.FILE = file

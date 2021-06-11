@@ -3,14 +3,11 @@ from nutrientScreen import nutrientScreen # the class for the nutrients screen
 from mistingScreen import mistingScreen   # the class for the misting screen 
 from homeScreen import homeScreen         # the class for the home screen  
 from lightingScreen import lighingScreen  # the class for the lighting screen
-from preSet import preSet
-from warning import Warning
-from PyQt5.QtCore import QSize, QTimer, Qt     # all the pyqt5 libraries we need
+from PyQt5.QtCore import Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-
-CRITICAL = "CRITICAL"
-WARNING = "WARNING"
+from client import ClientBluetooth
+import threading
 
 SIZE = (480, 800) # (1080, 1920) This will get the screen size as the tabs are configured based on that.
 
@@ -31,7 +28,7 @@ STYLE3 = "background-color: " + BACKGROUNDCOLOR + "; border: 2px solid white; fo
 
 
 def makeTab(tab, text, func):
-    tab.setFixedSize((int(SIZE[1] / 5)), (int(SIZE[0] / 5))) # set the size of the tab
+    tab.setFixedSize((int(SIZE[1] / 6)), (int(SIZE[0] / 4))) # set the size of the tab
     tab.setStyleSheet(STYLE)                                # set the background and boarder of the tab
     tab.setFont(BUTTONFONT)                                  # Set the button (tab) font                                                             
     tab.setText(text)                                        # Set the button (tab) text                                  
@@ -64,17 +61,6 @@ class MainWindow(QMainWindow):  # Main window for the gui
         # values for the nutrients screen
         self.NutrAmt = 300
 
-        # self.currentWidget = None
-
-        timer = QTimer(self)
-        timer.timeout.connect(self.checkWarnings)
-        timer.start(1000)
-
-        self.level = "working"
-
-        # self.mdi = QMdiArea()
-        # self.setBackgroundRole(self.mdi)
-
         self.startHome()
 
     def startHome(self):
@@ -91,10 +77,7 @@ class MainWindow(QMainWindow):  # Main window for the gui
         makeTab(self.Lighting, "Lighting", self.light_clicked)     # Make a tab, pass in the button, the text and the fucntion to call
 
         self.Nutrients = QPushButton(self)                         # Make a push button (Nutrients tab)                                                        
-        makeTab(self.Nutrients, "Nutrients", self.nutri_clicked)   # Pass in the tab to make, the text for the tab, and the function to call   
-
-        self.preSet = QPushButton(self)
-        makeTab(self.preSet, "Preset", self.preSet_clicked)                 
+        makeTab(self.Nutrients, "Nutrients", self.nutri_clicked)   # Pass in the tab to make, the text for the tab, and the function to call                    
         
         # self.showMaximized() # uncomment this when on the pi
         self.show() # comment this out when on anything with a bigger screen
@@ -102,69 +85,49 @@ class MainWindow(QMainWindow):  # Main window for the gui
 
     # Home is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def home_clicked(self):
-        self.setBtns(btn_clk=self.Home, other=[self.Misting, self.Lighting, self.Nutrients, self.preSet])
+        self.setBtns(btn_clk=self.Home, other=[self.Misting, self.Lighting, self.Nutrients])
         self.Window = homeScreen(self)      # change to the home screen
         self.setCentralWidget(self.Window)
-        self.currentWidget = self.centralWidget()
 
     # Misting is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def mist_clicked(self):
-        self.setBtns(btn_clk=self.Misting, other=[self.Home, self.Lighting, self.Nutrients, self.preSet])
+        self.setBtns(btn_clk=self.Misting, other=[self.Home, self.Lighting, self.Nutrients])
         self.Window = mistingScreen(self)      # change to the misting screen
         self.setCentralWidget(self.Window)
 
     # Lighting is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def light_clicked(self):
-        self.setBtns(btn_clk=self.Lighting, other=[self.Home, self.Misting, self.Nutrients, self.preSet])
+        self.setBtns(btn_clk=self.Lighting, other=[self.Home, self.Misting, self.Nutrients])
         self.Window = lighingScreen(self)      # change to the lighting screen
         self.setCentralWidget(self.Window)
 
     # Nutrients is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def nutri_clicked(self):
-        self.setBtns(btn_clk = self.Nutrients, other = [self.Misting, self.Home, self.Lighting, self.preSet])
+        self.setBtns(btn_clk = self.Nutrients, other = [self.Misting, self.Home, self.Lighting])
         self.Window = nutrientScreen(self)      # change to the nutrients screen
-        self.setCentralWidget(self.Window)
-
-    def preSet_clicked(self):
-        self.setBtns(btn_clk = self.preSet, other = [self.Misting, self.Home, self.Lighting, self.Nutrients])
-        self.Window = preSet(self)      # change to the nutrients screen\
-        # self.Window.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.setCentralWidget(self.Window)
 
     def setBtns(self, btn_clk, other):
         other[0].setStyleSheet(STYLE)
         other[1].setStyleSheet(STYLE)
         other[2].setStyleSheet(STYLE)
-        other[3].setStyleSheet(STYLE)
         btn_clk.setStyleSheet(STYLE2)
-
-    def checkWarnings(self):
-        if (self.level == CRITICAL):
-            self.setStyleSheet("Background-color: red")
-        elif (self.level == WARNING):
-            self.setStyleSheet("Background-color: rgb(200,200,50)")
-        else:
-            self.setStyleSheet("Background-color:" + BACKGROUNDCOLOR)
-        # # sub = QMdiSubWindow()
-        # # sub.setWidget(QLabel("Hello World"))
-        # if (self.currentWidget != Warning(self)):
-        #     self.currentWidget = self.centralWidget()
-        #     print(self.currentWidget)
-        #     sub = Warning(self)
-        #     self.setCentralWidget(sub)
-        #     self.mdi.addSubWindow(sub)
-        #     sub.show()
-        # else:
-        #     print(self.currentWidget)
-        #     self.setCentralWidget(self.currentWidget)
-        
 
 
 # I like the look of a more C++ program so this will run like main
 if __name__=='__main__':
+    #start the bluetooth client
+    client = ClientBluetooth()
+    #start_new_thread(, ())
+    x = threading.Thread(target=client.send_and_recieve_data, args=())
+    x.start()
+
     app = QApplication(sys.argv) # Sets the application
     # screen = app.primaryScreen() # This is to get the screen
     # size = screen.size()  # With the screen we can get the screen size and base the tabs off of that
     win = MainWindow()    # Make the main window
     win.show()              # shows the main window
+
     sys.exit(app.exec_()) # on exit
+    x.join()
+    

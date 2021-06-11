@@ -20,6 +20,8 @@ BUTTONSTYLE = "font: bold; color: rgb(107,138,116); background-color: white; bor
 
 STYLE = "font: bold; color: white;"
 
+NUMLABELS = 4
+
 def setButton(button, text, func, width, height):
     button.setStyleSheet(BUTTONSTYLE)
     button.setFont(BUTTONFONT)
@@ -33,8 +35,12 @@ def setButton(button, text, func, width, height):
 def makeLabel(label, text, font, style):
     label.setText(text)        # Set the text                                         
     label.setFont(font)         # Set the font for the label                           
-    # label.setAlignment(Qt.AlignCenter)# This will align it to the center    
+    label.setAlignment(Qt.AlignCenter)# This will align it to the center    
     label.setStyleSheet(style)  # Set the style of the label
+    label.setFixedHeight(100)
+    # label.QSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
+    # PySide2.QtWidgets.QSizePolicy.setVerticalPolicy(d)
+
 
 class preSet(QScrollArea):
     def __init__(self, parent, *args, **kwargs):
@@ -62,7 +68,7 @@ class preSet(QScrollArea):
         setButton(self.hot, "Hot", self.hotP, 200, 120)
         
         columns = QHBoxLayout() # This will be the main layout
-        # self.container = QWidget(self)c
+        # self.container = QWidget(self)
         # self.container.setStyleSheet("background-color: blue")
         # self.container.setGeometry(200, 150, 550, 300)
         tabs = QVBoxLayout()    # Make the layout for the tabs

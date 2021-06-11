@@ -2,7 +2,7 @@ import sys
 from types import CodeType
 from typing import List
 from OpButton import OpButton
-from PyQt5.QtCore import Qt, QTimer     # all the pyqt5 libraries we need
+from PyQt5.QtCore import QSize, Qt, QTimer     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import csv
@@ -62,17 +62,34 @@ class preSet(QScrollArea):
         setButton(self.hot, "Hot", self.hotP, 200, 120)
         
         columns = QHBoxLayout() # This will be the main layout
-        self.container = QWidget(self)
-        self.container.setStyleSheet("background-color: blue")
-        self.container.setGeometry(200, 150, 550, 300)
+        # self.container = QWidget(self)c
+        # self.container.setStyleSheet("background-color: blue")
+        # self.container.setGeometry(200, 150, 550, 300)
         tabs = QVBoxLayout()    # Make the layout for the tabs
         labels = QVBoxLayout()  # Make the layout for the labels, this will hold the layouts for each set of labels as it will better space them
-        plantLst = QVBoxLayout(self.container)  # Make the layout for the Reservoir
-        plantLst.setSpacing(10)
+        textBox = QLineEdit()
+        textBox.setStyleSheet("background-color: white; border-radius: 4px")
+        textBox.setFixedSize(400, 60)
+        textBox.setFont(LABELFONT1)
+        textSubmit = OpButton()
+        setButton(textSubmit, "Add", self.addPlant, 100, 60)
+        textLay = QHBoxLayout()
+        textLay.setSpacing(20)
+        plantLst = QListWidget()  # Make the layout for the Reservoir
+        # plantLst.setGeometry(220, 180, 540, 220)
+        listLay = QVBoxLayout()
+        listLay.setContentsMargins(50, 50, 50, 50)
+        # plantLst.setTextA(Qt.AlignCenter)
+        scrollBar = QScrollBar()
+        scrollBar.setStyleSheet("QScrollBar:vertical {width: 30px; margin: 5px 3px 5px 3px; border: 1px #2A2929; border-radius: 4px; background-color: blue solid;} QScrollBar::handle:vertical {max-height: 15px; background-color: green; border-radius: 3px;} QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {background: none;}")
+        plantLst.setVerticalScrollBar(scrollBar)
+        plantLst.setStyleSheet("background-color: white")
+        # plantLst.setSpacing(10)
+
         # plantLst.setAlignment(Qt.AlignCenter)
         # plantLst.setGeometry(0, 0, 50, 50)
         plantBtn = QHBoxLayout()
-        sliderLay = QHBoxLayout()
+        # sliderLay = QHBoxLayout()
         # self.scroller = QScrollArea()
         
 
@@ -83,12 +100,15 @@ class preSet(QScrollArea):
             self.numPlants = []
             for line in range(0, len(self.plants)):
                 text = self.plants[line].replace(',', '')
-                self.numPlants.append(QLabel())
+                item = QListWidgetItem(text)
+                item.setFont(LABELFONT1)
+                item.setTextAlignment(Qt.AlignCenter)
+                # self.numPlants.append(QLabel())
                 # self.numPlants[line].se
                 # self.plants[line] = QLabel(self)
-                makeLabel(self.numPlants[line], text, LABELFONT1, STYLE)
-                plantLst.addWidget(self.numPlants[line])
-                self.numPlants[line].move(0, 70)
+                # makeLabel(self.numPlants[line], text, LABELFONT1, STYLE)
+                plantLst.addItem(item)
+                # self.numPlants[line].move(0, 70)
 
 
         # self.container.setLayout(plantBtn)
@@ -123,11 +143,11 @@ class preSet(QScrollArea):
         # self.slider.setValue(int(self.nutrAmount / (int(INTERVAL))))
         self.slider.valueChanged.connect(self.slide)
 
-        sliderLay.addWidget(self.slider)
-        sliderLay.setAlignment(Qt.AlignVCenter)
-        sliderLay2 = QVBoxLayout()
-        sliderLay2.addItem(sliderLay)
-        sliderLay2.setAlignment(Qt.AlignRight)
+        # sliderLay.addWidget(self.slider)
+        # sliderLay.setAlignment(Qt.AlignVCenter)
+        # sliderLay2 = QVBoxLayout()
+        # sliderLay2.addItem(sliderLay)
+        # sliderLay2.setAlignment(Qt.AlignRight)
 
         plantBtn.addWidget(self.cold)
         plantBtn.addWidget(self.warm)
@@ -145,8 +165,14 @@ class preSet(QScrollArea):
         # add the labels to the rows they will be in
         # content.setLayout(plantLst)
         # spacer = QSpacerItem(300, 350, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        textLay.addWidget(textBox)
+        textLay.addWidget(textSubmit)
+        textLay.setAlignment(Qt.AlignCenter)
+        listLay.addWidget(plantLst)
         labels.addItem(plantBtn)
-        labels.addItem(sliderLay2)
+        labels.addItem(listLay)
+        labels.addItem(textLay)
+        # labels.addItem()
         # labels.addSpacerItem(spacer)
         # labels.addWidget(content) 
         
@@ -186,6 +212,9 @@ class preSet(QScrollArea):
         self.setList("cold.csv")
 
     def plantSelect(self):
+        pass
+
+    def addPlant(self):
         pass
 
     def setList(self, file):

@@ -88,9 +88,10 @@ class preSet(QScrollArea):
         listLay.setContentsMargins(50, 20, 50, 20) # left top right bottom
         scrollBar.setMinimum(0)
         scrollBar.setMaximum(2000)
-        scrollBar.setStyleSheet("QScrollBar:vertical {width: 30px; margin: 5px 3px 5px 3px; border: 1px #2A2929; border-radius: 4px; background-color: blue solid;} "
-                                + "QScrollBar::handle:vertical {max-height: 15px; background-color: green; border-radius: 3px;}" )
-                                #+ " QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {background: none;}")
+        scrollBar.setStyleSheet("QScrollBar:vertical { border: 5px solid white; width: 80px; margin: 15px 15px 15px 15px; border-radius: 15px;} "
+                                 + "QScrollBar::handle:vertical {background-color: rgb(107,138,116); border-radius: 20px;}"
+                                + " QScrollBar::sub-line:vertical {width: 0px; height: 0px;}"
+                                + " QScrollBar::add-line:vertical {width: 0px; height: 0px;}")
         self.plantLst.setVerticalScrollBar(scrollBar)
         self.plantLst.setStyleSheet("background-color: white; border-radius: 25px;")
         

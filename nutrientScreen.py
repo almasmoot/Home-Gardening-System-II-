@@ -118,6 +118,7 @@ class nutrientScreen(QWidget):
         tabs.addWidget(parent.Misting)
         tabs.addWidget(parent.Lighting)
         tabs.addWidget(parent.Nutrients)
+        tabs.addWidget(parent.preSet)
         
         # Add the tabs and labels to the main layout
         columns.addItem(tabs)
@@ -168,5 +169,3 @@ class nutrientScreen(QWidget):
                 data.write(json.dumps(json_data))
         else:
             self.temp_nutrients = value
-
-        

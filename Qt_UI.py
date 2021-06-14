@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):  # Main window for the gui
         self.setBtns(btn_clk=self.Home, other=[self.Misting, self.Lighting, self.Nutrients, self.preSet])
         self.Window = homeScreen(self)      # change to the home screen
         self.setCentralWidget(self.Window)
-        self.currentWidget = self.centralWidget()
+        # self.currentWidget = self.centralWidget()
 
     # Misting is clicked this will run, right now it will make the home light green and all other tabs dark green as to show which tab is currently selected
     def mist_clicked(self):
@@ -130,7 +130,6 @@ class MainWindow(QMainWindow):  # Main window for the gui
     def preSet_clicked(self):
         self.setBtns(btn_clk = self.preSet, other = [self.Misting, self.Home, self.Lighting, self.Nutrients])
         self.Window = preSet(self)      # change to the nutrients screen\
-        # self.Window.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.setCentralWidget(self.Window)
 
     def setBtns(self, btn_clk, other):
@@ -176,5 +175,5 @@ if __name__=='__main__':
     # size = screen.size()  # With the screen we can get the screen size and base the tabs off of that
     win = MainWindow()    # Make the main window
     win.show()              # shows the main window
-    sys.exit(app.exec_()) # on exit
-    x.join()
+    if sys.exit(app.exec_()): # on exit
+        x.join()

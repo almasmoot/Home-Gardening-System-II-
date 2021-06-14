@@ -88,6 +88,7 @@ class mistingScreen(QWidget):  # this is the class that will have all the fucnti
         tabs.addWidget(parent.Misting)
         tabs.addWidget(parent.Lighting)
         tabs.addWidget(parent.Nutrients)
+        tabs.addWidget(parent.preSet)
         
         # Add the tabs and labels to the main layout
         columns.addItem(tabs)

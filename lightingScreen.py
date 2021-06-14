@@ -34,6 +34,9 @@ class lighingScreen(QWidget):
         self.endTime = parent.EndTime
         self.duration = self.endTime - self.startTime
 
+        self.temp_start = 0
+        self.temp_end = 0
+
         self.initUI(parent)
 
     def initUI(self, parent): # initUI function will set up all the labels and buttons we want for the ui                     
@@ -118,7 +121,6 @@ class lighingScreen(QWidget):
         tabs.addWidget(parent.Misting)
         tabs.addWidget(parent.Lighting)
         tabs.addWidget(parent.Nutrients)
-        tabs.addWidget(parent.preSet)
         
         # Add the tabs and labels to the main layout
         columns.addItem(tabs)
@@ -140,12 +142,7 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
         
-        with open("data.json", "r") as data:
-            json_data = data.read()
-            json_data = json.loads(json_data)
-        with open("data.json", "w") as data:
-            json_data["lighting_screen"]["start_time"] = self.startTime
-            data.write(json.dumps(json_data))
+        self.updateVariables(self.startTime, "start")
 
     def decStart(self):
         self.decreaseStart.animation.stop()
@@ -157,12 +154,7 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.startLabel.setText("Start time: " + str(self.startTime) + ":00 am")
 
-        with open("data.json", "r") as data:
-            json_data = data.read()
-            json_data = json.loads(json_data)
-        with open("data.json", "w") as data:
-            json_data["lighting_screen"]["start_time"] = self.startTime
-            data.write(json.dumps(json_data))
+        self.updateVariables(self.startTime, "start")
 
     def incEnd(self):
         self.increaseEnd.animation.stop()
@@ -174,12 +166,7 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
-        with open("data.json", "r") as data:
-            json_data = data.read()
-            json_data = json.loads(json_data)
-        with open("data.json", "w") as data:
-            json_data["lighting_screen"]["end_time"] = self.endTime
-            data.write(json.dumps(json_data))
+        self.updateVariables(self.endTime, "end")
 
     def decEnd(self):
         self.decreaseEnd.animation.stop()
@@ -191,9 +178,26 @@ class lighingScreen(QWidget):
         self.label2.setText(str(self.duration) + " hours")
         self.endLabel.setText("End time: " + str(12 if(self.endTime == 12) else self.endTime % 12) + ":00 pm")
 
-        with open("data.json", "r") as data:
-            json_data = data.read()
-            json_data = json.loads(json_data)
-        with open("data.json", "w") as data:
-            json_data["lighting_screen"]["end_time"] = self.endTime
-            data.write(json.dumps(json_data))
+        self.updateVariables(self.endTime, "end")
+
+    def updateVariables(self, value, start_or_end):
+        if "start" in start_or_end:
+            if self.temp_start == value:
+                with open("data.json", "r") as data:
+                    json_data = data.read()
+                    json_data = json.loads(json_data)
+                with open("data.json", "w") as data:
+                    json_data["lighting_screen"]["start_time"] = self.startTime
+                    data.write(json.dumps(json_data))
+            else:
+                self.temp_start = value
+        elif "end" in start_or_end:
+            if self.temp_start == value:
+                with open("data.json", "r") as data:
+                    json_data = data.read()
+                    json_data = json.loads(json_data)
+                with open("data.json", "w") as data:
+                    json_data["lighting_screen"]["end_time"] = self.startTime
+                    data.write(json.dumps(json_data))
+            else:
+                self.temp_end = value

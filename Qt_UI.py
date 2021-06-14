@@ -1,4 +1,5 @@
 import sys  # to get the screen size and close the window
+import os
 from nutrientScreen import nutrientScreen # the class for the nutrients screen 
 from mistingScreen import mistingScreen   # the class for the misting screen 
 from homeScreen import homeScreen         # the class for the home screen  
@@ -8,7 +9,6 @@ from warning import Warning
 from PyQt5.QtCore import QSize, QTimer, Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from client import ClientBluetooth
 import threading
 
 CRITICAL = "CRITICAL"
@@ -30,6 +30,8 @@ STYLE = "background-color: rgb(255,255,255); border: none; font: bold; color: " 
 STYLE2 = "background-color: " + BACKGROUNDCOLOR + "; border: none; font: bold; color: white;"
 STYLE3 = "background-color: " + BACKGROUNDCOLOR + "; border: 2px solid white; font: bold; color: white;"
 
+def start_bluetooth():
+    os.system("python client.py")
 
 
 def makeTab(tab, text, func):
@@ -163,17 +165,13 @@ class MainWindow(QMainWindow):  # Main window for the gui
 
 # I like the look of a more C++ program so this will run like main
 if __name__=='__main__':
-    #start the bluetooth client
-    client = ClientBluetooth()
-    # start_new_thread(, ())
-    x = threading.Thread(target=client.send_and_recieve_data, args=())
-    x.start()
-
-
+    bluetooth_thread = threading.Thread(target = start_bluetooth, args=())
+    bluetooth_thread.start()
+    
     app = QApplication(sys.argv) # Sets the application
     # screen = app.primaryScreen() # This is to get the screen
     # size = screen.size()  # With the screen we can get the screen size and base the tabs off of that
     win = MainWindow()    # Make the main window
     win.show()              # shows the main window
-    if sys.exit(app.exec_()): # on exit
-        x.join()
+    sys.exit(app.exec_()) # on exit
+    

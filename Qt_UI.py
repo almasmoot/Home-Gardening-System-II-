@@ -1,22 +1,22 @@
 import sys  # to get the screen size and close the window
-from nutrientScreen import nutrientScreen # the class for the nutrients screen 
-from mistingScreen import mistingScreen   # the class for the misting screen 
-from homeScreen import homeScreen         # the class for the home screen  
-from lightingScreen import lighingScreen  # the class for the lighting screen
-from preSet import preSet
-from warning import Warning
+from nutrientScreen import nutrientScreen # The class for the nutrients screen 
+from mistingScreen import mistingScreen   # The class for the misting screen 
+from homeScreen import homeScreen         # The class for the home screen  
+from lightingScreen import lighingScreen  # The class for the lighting screen
+from preSet import preSet                 # The class for the preset screen
+from warning import Warning               # Warning class was for a popup warning window, not used
 from PyQt5.QtCore import QSize, QTimer, Qt     # all the pyqt5 libraries we need
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from client import ClientBluetooth
+from client import ClientBluetooth  # For bluetooth communication
 import threading
 
-CRITICAL = "CRITICAL"
-WARNING = "WARNING"
+CRITICAL = "CRITICAL"   # Critical warning, will turn the screen red
+WARNING = "WARNING"     # Warning, will turn the the screen yellow
 
 SIZE = (480, 800) # (1080, 1920) This will get the screen size as the tabs are configured based on that.
 
-FONT = "Cambria"
+FONT = "Cambria"    # The font for all the text
 
 BUTTONFONT = QFont(FONT, (int(SIZE[0]/32))) # font for the tabs
 LABELFONT1 = QFont(FONT, (int(SIZE[0]/16))) # font for the bigger labels (reservoir, temperature)
@@ -24,14 +24,15 @@ LABELFONT2 = QFont(FONT, (int(SIZE[0]/32))) # font for the readings for the labe
 # WB = 500 # Width buffer for the tabs
 # HB = -65 # Hight buffer for the tabs
 # BUTTONCOLOR = "rgb(58,99,70)"
-BACKGROUNDCOLOR = "rgb(107,138,116)" #    rgb(74,223,0)
+BACKGROUNDCOLOR = "rgb(107,138,116)" # a light green
 
-STYLE = "background-color: rgb(255,255,255); border: none; font: bold; color: " + BACKGROUNDCOLOR + ";"   # rgb(58,99,70)
+# The different styles used
+STYLE = "background-color: rgb(255,255,255); border: none; font: bold; color: " + BACKGROUNDCOLOR + ";"
 STYLE2 = "background-color: " + BACKGROUNDCOLOR + "; border: none; font: bold; color: white;"
 STYLE3 = "background-color: " + BACKGROUNDCOLOR + "; border: 2px solid white; font: bold; color: white;"
 
 
-
+# make a tab and set all of its specifications, takes in the button (tab), the text for the tab, and the function to connect it to
 def makeTab(tab, text, func):
     tab.setFixedSize((int(SIZE[1] / 5)), (int(SIZE[0] / 5))) # set the size of the tab
     tab.setStyleSheet(STYLE)                                # set the background and boarder of the tab
@@ -68,23 +69,23 @@ class MainWindow(QMainWindow):  # Main window for the gui
 
         # self.currentWidget = None
 
-        timer = QTimer(self)
-        timer.timeout.connect(self.checkWarnings)
-        timer.start(1000)
+        timer = QTimer(self)                        # Timer to check for warnings
+        timer.timeout.connect(self.checkWarnings)   # The check warnings function will check if there is a problem
+        timer.start(1000)                           # Every 10th of a second
 
-        self.level = "working"
+        self.level = "working" # level for the warnings
 
         # self.mdi = QMdiArea()
         # self.setBackgroundRole(self.mdi)
 
-        self.startHome()
+        self.startHome() # Set up the Tabs on the left, and start the home screen.
 
     def startHome(self):
         
 
         self.Home = QPushButton(self)                              # Make a push button (Home tab)                                                        
         makeTab(self.Home, "Home", self.home_clicked)              # Make a tab, pass in the button, the text and the fucntion to call
-        self.Home.animateClick()                           
+        self.Home.animateClick()                                   # This will click the home screen tab and will start the home screen first
 
         self.Misting = QPushButton(self)                           # Make a push button (Misting tab)                                                        
         makeTab(self.Misting, "Misting", self.mist_clicked)        # Make a tab, pass in the button, the text and the fucntion to call
@@ -95,8 +96,8 @@ class MainWindow(QMainWindow):  # Main window for the gui
         self.Nutrients = QPushButton(self)                         # Make a push button (Nutrients tab)                                                        
         makeTab(self.Nutrients, "Nutrients", self.nutri_clicked)   # Pass in the tab to make, the text for the tab, and the function to call   
 
-        self.preSet = QPushButton(self)
-        makeTab(self.preSet, "Preset", self.preSet_clicked)                 
+        self.preSet = QPushButton(self)                           # Make a push button (Preset tab)                                          
+        makeTab(self.preSet, "Preset", self.preSet_clicked)       # Pass in the tab to make, the text for the tab, and the function to call     
         
         # self.showMaximized() # uncomment this when on the pi
         self.show() # comment this out when on anything with a bigger screen
@@ -127,25 +128,30 @@ class MainWindow(QMainWindow):  # Main window for the gui
         self.Window = nutrientScreen(self)      # change to the nutrients screen
         self.setCentralWidget(self.Window)
 
+    # Preset will give a list of plants to use for certain conditions.
     def preSet_clicked(self):
         self.setBtns(btn_clk = self.preSet, other = [self.Misting, self.Home, self.Lighting, self.Nutrients])
-        self.Window = preSet(self)      # change to the nutrients screen\
+        self.Window = preSet(self)      # change to the nutrients screen.
         self.setCentralWidget(self.Window)
 
+    # Set buttons sets up the tabs to change to the correct colors. Parameters: self, the button clicked, and a list of other buttons that were not clicked.
     def setBtns(self, btn_clk, other):
-        other[0].setStyleSheet(STYLE)
+        other[0].setStyleSheet(STYLE)   # Set the unclicked buttons to white
         other[1].setStyleSheet(STYLE)
         other[2].setStyleSheet(STYLE)
         other[3].setStyleSheet(STYLE)
-        btn_clk.setStyleSheet(STYLE2)
+        btn_clk.setStyleSheet(STYLE2)   # The button clicked will be the same color of the backgound.
 
+    # Check warnings check the warning level and set the background accordingling.
     def checkWarnings(self):
-        if (self.level == CRITICAL):
-            self.setStyleSheet("Background-color: red")
-        elif (self.level == WARNING):
-            self.setStyleSheet("Background-color: rgb(200,200,50)")
-        else:
-            self.setStyleSheet("Background-color:" + BACKGROUNDCOLOR)
+        if (self.level == CRITICAL): # if critical
+            self.setStyleSheet("Background-color: red") # background red
+        elif (self.level == WARNING): # if at a warning level
+            self.setStyleSheet("Background-color: rgb(200,200,50)") # background yellow
+        else:  # Other wise no warning
+            self.setStyleSheet("Background-color:" + BACKGROUNDCOLOR) # background is the normal color
+
+        # Code for a popup window that will show a warning (Does not work)
         # # sub = QMdiSubWindow()
         # # sub.setWidget(QLabel("Hello World"))
         # if (self.currentWidget != Warning(self)):

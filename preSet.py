@@ -59,6 +59,7 @@ class preSet(QScrollArea):
         self.plantLst = QListWidget()  # list of plants
         listLay = QVBoxLayout()
         scrollBar = QScrollBar()
+        setbtnLay = QHBoxLayout()
 
         ## -- KEEP --
         ## This will initialize the text box and text layout
@@ -71,19 +72,26 @@ class preSet(QScrollArea):
         # setButton(self.textSubmit, "Add", self.addPlant, 100, 50, BUTTONSTYLE2, LABELFONT2)
 
         self.cold = OpButton()
-        setButton(self.cold, "Cold", self.coldP, 200, 120, BUTTONSTYLE, BUTTONFONT)
+        setButton(self.cold, "Cold", self.coldP, 180, 100, BUTTONSTYLE, BUTTONFONT)
 
         self.warm = OpButton()
-        setButton(self.warm, "Warm", self.warmP, 200, 120, BUTTONSTYLE, BUTTONFONT)
+        setButton(self.warm, "Warm", self.warmP, 180, 100, BUTTONSTYLE, BUTTONFONT)
 
         self.hot = OpButton()
-        setButton(self.hot, "Hot", self.hotP, 200, 120, BUTTONSTYLE, BUTTONFONT)
+        setButton(self.hot, "Hot", self.hotP, 180, 100, BUTTONSTYLE, BUTTONFONT)
+
+        self.set = OpButton()
+        setButton(self.set, "Set Conditions", self.SetC, 140, 60, BUTTONSTYLE2, LABELFONT2)
 
         ## -- KEEP --
         ## This is the text box that in theory will allow the user to add a plant to the list
         # textBox.setStyleSheet("background-color: white; border-radius: 25px")
         # textBox.setFixedSize(400, 50)
         # textBox.setFont(LABELFONT2)
+
+        setbtnLay.setAlignment(Qt.AlignRight)
+        setbtnLay.setContentsMargins(0, 0, 10, 10)
+        setbtnLay.addWidget(self.set)
         
         listLay.setContentsMargins(50, 20, 50, 20) # left top right bottom
         scrollBar.setMinimum(0)
@@ -110,7 +118,7 @@ class preSet(QScrollArea):
         plantBtn.addWidget(self.warm)
         plantBtn.addWidget(self.hot)
         plantBtn.setAlignment(Qt.AlignCenter)
-        plantBtn.setContentsMargins(0, 10, 0, 0)
+        plantBtn.setContentsMargins(10, 10, 10, 0)
         plantBtn.setSpacing(15)
         
         ## -- KEEP --
@@ -126,6 +134,7 @@ class preSet(QScrollArea):
         labels.setAlignment(Qt.AlignVCenter) # Further align all the labels in the center
         labels.addItem(plantBtn)
         labels.addItem(listLay)
+        labels.addItem(setbtnLay)
         # labels.addItem(textLay) # uncomment this to add the text box and the add button layout to the ui
         
         # Add the tabs to the tabs layout
@@ -164,6 +173,32 @@ class preSet(QScrollArea):
         self.hot.animation.start()
 
         self.setList("hot.csv")
+
+    def SetC(self):
+        self.set.animation.stop()
+        self.set.animation.start()
+
+        if (self.FILE == "hot.csv"):
+            # hot conditions
+            self.par.MistIntrv = 2
+            self.par.MistSec = 0
+            self.par.StartTime = 8
+            self.par.EndTime = 20
+            self.par.NutrAmt = 300
+        if (self.FILE == "warm.csv"):
+            # warm conditions
+            self.par.MistIntrv = 2
+            self.par.MistSec = 0
+            self.par.StartTime = 8
+            self.par.EndTime = 20
+            self.par.NutrAmt = 300
+        if (self.FILE == "cold.csv"):
+            # cold conditions
+            self.par.MistIntrv = 2
+            self.par.MistSec = 0
+            self.par.StartTime = 8
+            self.par.EndTime = 20
+            self.par.NutrAmt = 300
 
     # When a plant in the list is cliked on
     # def plantSelect(self):
